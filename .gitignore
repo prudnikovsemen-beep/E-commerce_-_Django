@@ -1,0 +1,53 @@
+# --- Python cache & artifacts ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# --- Virtual environments ---
+venv/
+env/
+.venv/
+
+# --- Env files (never commit secrets) ---
+.env
+.env.local
+.env.*.local
+
+# --- Database & media (not stored in Git) ---
+db.sqlite3
+*.db
+media/
+staticfiles/
+
+# --- Poetry (keep pyproject.toml and poetry.lock!) ---
+# ничего не игнорируем для poetry, кроме env
+
+# --- IDE & OS ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# --- Jupyter ---
+.ipynb_checkpoints
+
+# --- Coverage & tests ---
+.coverage
+htmlcov/
+.pytest_cache/
+
+# --- Docs & misc ---
+logs/
+*.docx
+~$*
+.TZ/
