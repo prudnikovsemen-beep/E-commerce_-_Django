@@ -10,7 +10,7 @@
 ## Как запустить
 1. `python -m venv venv`
 2. Активировать виртуальное окружение.
-3. 'poetry install'
+3. `poetry install`
 4. `python manage.py runserver`
 
 ## После запустить в браузере 
