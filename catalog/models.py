@@ -16,7 +16,8 @@ class Category(models.Model):
         verbose_name="Родительская категория"
     )
     is_active = models.BooleanField(default=True, verbose_name="Активна")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    # Временно default=timezone.now, чтобы миграция прописала DEFAULT в БД
+    created_at = models.DateTimeField(default=timezone.now, verbose_name="Дата создания")
 
     class Meta:
         verbose_name = "Категория"
@@ -51,8 +52,10 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
     stock = models.PositiveIntegerField(default=0, verbose_name="Остаток на складе")
     is_active = models.BooleanField(default=True, verbose_name="В продаже")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
+
+    # ВАЖНО: здесь тоже default=timezone.now (а не auto_now_add=True) — это исправит ошибку
+    created_at = models.DateTimeField(default=timezone.now, verbose_name="Дата добавления")
+    updated_at = models.DateTimeField(default=timezone.now, verbose_name="Дата обновления")
 
     class Meta:
         verbose_name = "Товар"

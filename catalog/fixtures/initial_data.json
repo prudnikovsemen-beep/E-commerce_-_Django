@@ -1,0 +1,52 @@
+[
+  {
+    "model": "catalog.category",
+    "pk": 1,
+    "fields": {
+      "name": "Электроника",
+      "slug": "electronics",
+      "description": "Телефоны, ноутбуки, аксессуары.",
+      "parent": null,
+      "is_active": true
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 2,
+    "fields": {
+      "name": "Инструменты",
+      "slug": "tools",
+      "description": "Ручной и электроинструмент.",
+      "parent": null,
+      "is_active": true
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 1,
+    "fields": {
+      "name": "Дрель аккумуляторная",
+      "slug": "drel-akkumulyatornaya",
+      "description": "Компактная дрель для дома и мастерской.",
+      "price": "4500.00",
+      "category": 2,
+      "is_active": true,
+      "stock": 15,
+      "image": null
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 2,
+    "fields": {
+      "name": "Смартфон базовый",
+      "slug": "smartfon-bazovyj",
+      "description": "Простой смартфон для повседневных задач.",
+      "price": "12990.00",
+      "category": 1,
+      "is_active": true,
+      "stock": 8,
+      "image": null
+    }
+  }
+]
