@@ -79,3 +79,19 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.price} ₽)"
+
+# --- Новая модель ---
+class ContactInfo(models.Model):
+    phone = models.CharField("Телефон", max_length=50, blank=True)
+    email = models.EmailField("Email", blank=True)
+    address = models.TextField("Адрес", blank=True)
+    working_hours = models.CharField("Часы работы", max_length=100, blank=True)
+    telegram = models.URLField("Telegram", blank=True)
+    whatsapp = models.URLField("WhatsApp", blank=True)
+
+    def __str__(self):
+        return "Контактные данные"
+
+    class Meta:
+        verbose_name = "Контактные данные"
+        verbose_name_plural = "Контактные данные"
