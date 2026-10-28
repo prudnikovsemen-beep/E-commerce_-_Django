@@ -1,0 +1,7 @@
+<h1>{{ product.name }}</h1>
+<p>Цена: {{ product.price }} ₽</p>
+<p>Описание: {{ product.description }}</p>
+{% if product.image %}
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 300px;">
+{% endif %}
+<a href="{% url 'product_list' %}">← Вернуться в каталог</a>
