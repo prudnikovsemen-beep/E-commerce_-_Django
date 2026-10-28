@@ -1,5 +1,11 @@
 from django.shortcuts import render
 
 def product_list(request):
-    # Пока просто возвращаем простой текст, чтобы проверить, что пути работают
-    return render(request, 'products/product_list.html', {'products': })
+    # Передаем пустой список, чтобы шаблон не ругался, если товаров пока нет
+    context = {
+        'products': [
+            {'name': 'Смартфон X', 'price': 25000},
+            {'name': 'Наушники Y', 'price': 5000},
+        ]
+    }
+    return render(request, 'products/product_list.html', context)
