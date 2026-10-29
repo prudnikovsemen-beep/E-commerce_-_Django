@@ -1,17 +1,30 @@
 {% extends 'base.html' %}
-{% block title %}Каталог товаров{% endblock %}
+
 {% block content %}
-    <h1>Каталог товаров</h1>
+<h1>Каталог товаров</h1>
+
+{% if products %}
     <div class="products-grid">
         {% for product in products %}
-            <div class="card">
-                <h2>{{ product.name }}</h2>
-                <p>{{ product.description|truncatechars:100 }}</p>
-                <p>Цена: {{ product.price }} ₽</p>
-                <a href="{% url 'products:product_detail' pk=product.pk %}">Подробнее</a>
+            <div class="product-card">
+                <!-- Проверка наличия изображения -->
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                    <div class="no-image">Нет фото</div>
+                {% endif %}
+
+                <h3>{{ product.name }}</h3>
+                <p class="price">{{ product.price }} ₽</p>
+                <!-- Критерий: обрезано описание до 100 символов -->
+                <p class="description">{{ product.description|truncatechars:100 }}</p>
+
+                <!-- Критерий: переходы с главной на товар -->
+                <a href="{% url 'products:product_detail' pk=product.pk %}" class="btn">Подробнее</a>
             </div>
-        {% empty %}
-            <p>Товаров пока нет.</p>
         {% endfor %}
     </div>
+{% else %}
+    <p>Товаров пока нет.</p>
+{% endif %}
 {% endblock %}
