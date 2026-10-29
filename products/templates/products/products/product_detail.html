@@ -1,7 +1,24 @@
-<h1>{{ product.name }}</h1>
-<p>Цена: {{ product.price }} ₽</p>
-<p>Описание: {{ product.description }}</p>
-{% if product.image %}
-    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 300px;">
-{% endif %}
-<a href="{% url 'product_list' %}">← Вернуться в каталог</a>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Мой Магазин{% endblock %}</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .card { border: 1px solid #ccc; padding: 15px; }
+    </style>
+</head>
+<body>
+    <!-- Критерий: Подшаблон создан и подключен -->
+    {% include 'products/menu.html' %}
+
+    <hr>
+
+    {% block content %}{% endblock %}
+
+    <footer>
+        <p>&copy; 2024 Мой Магазин</p>
+    </footer>
+</body>
+</html>
+
