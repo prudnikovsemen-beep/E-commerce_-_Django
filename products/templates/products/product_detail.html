@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+    <h1>{{ product.name }}</h1>
+    <p><strong>Цена:</strong> {{ product.price }} ₽</p>
+    <p><strong>Описание:</strong> {{ product.description }}</p>
+
+    {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 100%; height: auto; border-radius: 8px;">
+    {% endif %}
+
+    <br>
+    <a href="{% url 'product_list' %}">&larr; Вернуться в каталог</a>
+{% endblock %}
