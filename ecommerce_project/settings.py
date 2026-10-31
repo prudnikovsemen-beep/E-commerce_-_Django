@@ -57,7 +57,7 @@ DATABASES = {
         "HOST": os.environ.get("DB_HOST", "localhost"),
         "PORT": int(os.environ.get("DB_PORT", 5432)),
         "OPTIONS": {
-            "options": "-c client_encoding='UTF8'",
+        "options": "-c client_encoding='UTF8'",
         },
     }
 }

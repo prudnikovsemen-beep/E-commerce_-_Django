@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Каталог товаров{% endblock %}
+
+{% block content %}
+<h1>Каталог товаров</h1>
+
+<!-- Вот сюда вставляем кнопку/ссылку -->
+<p>
+  <a href="{% url 'products:product_create' %}">Добавить товар</a>
+</p>
+
+{% for product in page_obj %}  {# или products, если пагинации ещё нет #}
+  <div class="product-card">
+        <h3>{{ product.name }}</h3>
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% endif %}
+        <p>{{ product.description|truncatechars:100 }}</p>
+        <p>Цена: {{ product.price }} ₽</p>
+    </div>
+{% endfor %}
+
+{# Блок пагинации (если уже сделал) #}
+{% if page_obj.has_previous or page_obj.has_next %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}">← Предыдущая</a>
+    {% endif %}
+    <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}">Следующая →</a>
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}
+
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">← Предыдущая</a>
+    {% endif %}
+
+    <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Следующая →</a>
+    {% endif %}
+</div>
+
