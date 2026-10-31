@@ -1,21 +1,21 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product
-from django.core.paginator import Paginator  # Если нужна пагинация
-
+from .forms import ProductForm
 
 def product_list(request):
     products = Product.objects.all()
-    # Если нужно выполнить доп. задание по пагинации, раскомментируй строки ниже:
-    # paginator = Paginator(products, 10)
-    # page_number = request.GET.get('page')
-    # products = paginator.get_page(page_number)
-
-    context = {'products': products}
-    return render(request, 'products/product_list.html', context)
-
+    return render(request, 'products/product_list.html', {'products': products})
 
 def product_detail(request, pk):
-    # Критерий: Контроллер получает pk, извлекает объект через ORM
     product = get_object_or_404(Product, pk=pk)
-    context = {'product': product}
-    return render(request, 'products/product_detail.html', context)
+    return render(request, 'products/product_detail.html', {'product': product})
+
+def product_create(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('products:product_list')
+    else:
+        form = ProductForm()
+    return render(request, 'products/product_form.html', {'form': form})
