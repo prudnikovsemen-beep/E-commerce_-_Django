@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Статьи блога{% endblock %}
+
+{% block content %}
+<h1>Статьи блога</h1>
+
+{% for article in object_list %}
+    <h2><a href="{% url 'blog:blog_detail' article.pk %}">{{ article.title }}</a></h2>
+    <p>{{ article.created_at|date:"d.m.Y" }}</p>
+{% empty %}
+    <p>Статей пока нет.</p>
+{% endfor %}
+
+<a href="{% url 'blog:blog_create' %}">Создать статью</a>
+{% endblock %}

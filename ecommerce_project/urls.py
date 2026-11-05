@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('catalog.urls')),  # <-- подключаем приложение
+    path("admin/", admin.site.urls),
+    path("", include("catalog.urls", "catalog")),
+    path("blogs/", include("blog.urls", "blog")),
 ]

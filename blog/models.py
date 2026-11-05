@@ -1,10 +1,11 @@
 from django.db import models
 from django.urls import reverse
+from ckeditor.fields import RichTextField
 
 
 class Blog(models.Model):
     title = models.CharField(max_length=150, verbose_name="заголовок")
-    content = models.TextField(verbose_name="содержимое")
+    content = RichTextField(verbose_name="содержимое")
     preview = models.ImageField(upload_to="blog/previews/", verbose_name="превью")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="дата создания")
     is_published = models.BooleanField(default=True, verbose_name="признак публикации")
