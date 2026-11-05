@@ -51,4 +51,10 @@ logs/
 *.docx
 ~$*
 .TZ/
+<<<<<<< HEAD
+*.pyc
+db.sqlite3
+
+=======
 .media/
+>>>>>>> 7591698f110accc0bc3bffa9c18ba7708eb6859e

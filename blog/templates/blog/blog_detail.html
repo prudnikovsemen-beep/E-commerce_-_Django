@@ -1,0 +1,11 @@
+# blog/templates/blog/blog_detail.html
+{% extends 'base.html' %}
+{% block title %}{{ object.title }}{% endblock %}
+{% block content %}
+    <article>
+        <h1>{{ object.title }}</h1>
+        <p>Дата: {{ object.created_at|date:"d.m.Y" }}</p>
+        <div>{{ object.content|linebreaks }}</div>
+    </article>
+    <a href="{% url 'blog:blog_list' %}">← Назад к списку</a>
+{% endblock %}
