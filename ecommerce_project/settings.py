@@ -16,9 +16,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
     'catalog',
     'blog',
     'ckeditor',
+=======
+    'products',
+>>>>>>> 7591698f110accc0bc3bffa9c18ba7708eb6859e
 ]
 
 MIDDLEWARE = [
@@ -36,7 +40,11 @@ ROOT_URLCONF = 'ecommerce_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+<<<<<<< HEAD
         'DIRS': [BASE_DIR / 'templates'],
+=======
+        'DIRS': [BASE_DIR / "templates"],
+>>>>>>> 7591698f110accc0bc3bffa9c18ba7708eb6859e
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -59,7 +67,7 @@ DATABASES = {
         "HOST": os.environ.get("DB_HOST", "localhost"),
         "PORT": int(os.environ.get("DB_PORT", 5432)),
         "OPTIONS": {
-            "options": "-c client_encoding='UTF8'",
+        "options": "-c client_encoding='UTF8'",
         },
     }
 }
