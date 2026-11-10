@@ -1,5 +1,5 @@
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']   # <-- добавить
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+.errorlist {
+    color: #d9534f;
+    list-style: none;
+    padding-left: 0;
+}

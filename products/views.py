@@ -43,3 +43,15 @@ def product_delete(request, pk):  # ← добавить
         product.delete()
         return redirect('products:product_list')
     return render(request, 'products/product_delete.html', {'product': product})
+
+
+def product_edit(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('product_list')
+    else:
+        form = ProductForm(instance=product)
+    return render(request, 'products/product_form.html', {'form': form})
