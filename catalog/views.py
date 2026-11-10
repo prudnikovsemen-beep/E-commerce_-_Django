@@ -30,14 +30,14 @@ class ProductDetailView(DetailView):
 
 class ProductCreateView(CreateView):
     model = Product
-    fields = ("name", "description", "price")  # подставь свои поля модели
+    fields = ("name", "description", "price", "image")  # <-- добавили image
     template_name = "catalog/product_form.html"
     success_url = reverse_lazy("catalog:product_list")
 
 
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = ("name", "description", "price")
+    fields = ("name", "description", "price", "image")  # <-- добавили image
     template_name = "catalog/product_form.html"
     success_url = reverse_lazy("catalog:product_list")
 
