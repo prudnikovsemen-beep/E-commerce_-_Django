@@ -51,7 +51,6 @@ logs/
 *.docx
 ~$*
 .TZ/
-<<<<<<< HEAD
 *.pyc
 db.sqlite3
 
