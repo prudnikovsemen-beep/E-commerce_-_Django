@@ -1,60 +1,47 @@
+{% load static %}
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Skystore{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>{% block title %}Магазин{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <!-- НАВИГАЦИЯ (ШАПКА) -->
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-        <h5 class="my-0 mr-md-auto font-weight-normal">Skystore</h5>
-        <nav class="ms-5">
-            <!-- Используем правильные имена URL с префиксами приложений -->
-            <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:product_list' %}">Каталог</a>
-            <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:contacts' %}">Контакты</a>
-            <a class="p-2 btn btn-outline-primary" href="{% url 'blog:blog_list' %}">Блог</a>
-        </nav>
-    </div>
-
-    <!-- ОСНОВНОЙ КОНТЕНТ (сюда будет подставляться содержимое страниц) -->
-    <div class="container">
-        {% block content %}{% endblock %}
-    </div>
-
-    <!-- ПОДВАЛ (ФУТЕР) -->
-    <footer class="pt-4 my-md-5 pt-md-5 border-top">
-        <div class="row">
-            <div class="col-12 col-md">
-                SkyStore
-                <small class="d-block mb-3 text-muted">&copy; 2023</small>
-            </div>
-            <div class="col-6 col-md">
-                <h5>Категории</h5>
-                <ul class="list-unstyled text-small">
-                    <li><a class="text-muted" href="#">Рассылки</a></li>
-                    <li><a class="text-muted" href="#">Телеграм боты</a></li>
-                    <li><a class="text-muted" href="#">Полезные утилиты</a></li>
-                    <li><a class="text-muted" href="#">Веб-приложения</a></li>
-                    <li><a class="text-muted" href="#">Микросервисы</a></li>
-                </ul>
-            </div>
-            <div class="col-6 col-md">
-                <h5>Дополнительно</h5>
-                <ul class="list-unstyled text-small">
-                    <li><a class="text-muted" href="#">Мы пишем</a></li>
-                </ul>
-            </div>
-            <div class="col-6 col-md">
-                <h5>О нас</h5>
-                <ul class="list-unstyled text-small">
-                    <li><a class="text-muted" href="{% url 'catalog:contacts' %}">Контакты</a></li>
-                </ul>
-            </div>
+    <!-- ШАПКА -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="/" class="logo">ЛОГОТИП</a>
+            <nav class="main-nav">
+                <a href="{% url 'catalog:product_list' %}">Каталог</a>
+                <a href="{% url 'catalog:contacts' %}">Контакты</a>
+                <a href="{% url 'blog:blog_list' %}">Блог</a>
+            </nav>
+            <a href="#" class="cart-link">Корзина</a>
         </div>
-    </footer>
+    </header>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- СТРОКА ПОИСКА -->
+    <form class="search-form" action="#" method="get">
+        <input type="text" name="q" placeholder="Поиск по товарам…" required>
+        <button type="submit">Найти</button>
+    </form>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ПОДВАЛ -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <a href="{% url 'catalog:contacts' %}">О нас</a>
+            <a href="#">Доставка</a>
+            <a href="#">Возврат</a>
+            <a href="/admin/">Админка</a>
+        </div>
+        <p class="copyright">&copy; 2024 Магазин. Все права защищены.</p>
+    </footer>
 </body>
 </html>

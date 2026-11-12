@@ -7,7 +7,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("catalog.urls", "catalog")),
     path("blogs/", include("blog.urls", "blog")),
-    path('products/', include('products.urls', namespace='products')),
     path("ckeditor5/", include("django_ckeditor_5.urls")),
 ]
 

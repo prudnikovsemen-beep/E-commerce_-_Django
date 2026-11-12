@@ -1,15 +1,44 @@
 <!DOCTYPE html>
 <html lang="ru">
+{% load static %}
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Магазин{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
-    <nav>
-        <a href="{% url 'products:product_list' %}">Каталог</a> |
-        <a href="/admin/">Админка</a>
-    </nav>
-    <hr>
-    {% block content %}{% endblock %}
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="/" class="logo">ЛОГОТИП</a>
+            <nav class="main-nav">
+                <a href="/catalog/">Каталог</a>
+                <a href="/blog/">Блог</a>
+                <a href="/about/">О нас</a>
+            </nav>
+            <a href="/cart/" class="cart-link">Корзина</a>
+        </div>
+    </header>
+
+    <!-- Строка поиска -->
+    <form class="search-form" action="#" method="get">
+        <input type="text" name="q" placeholder="Поиск по товарам…" required>
+        <button type="submit">Найти</button>
+    </form>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <a href="/about/">О нас</a>
+            <a href="/delivery/">Доставка</a>
+            <a href="/return/">Возврат</a>
+            <a href="/admin/">Админка</a>
+        </div>
+        <p class="copyright">&copy; 2024 Магазин. Все права защищены.</p>
+    </footer>
 </body>
 </html>
