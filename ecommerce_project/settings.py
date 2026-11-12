@@ -19,7 +19,7 @@ INSTALLED_APPS = [
     'products',
     'catalog',
     'blog',
-    'ckeditor',
+    'django_ckeditor_5',
 ]
 
 MIDDLEWARE = [
@@ -78,6 +78,19 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
-TATICFILES_DIRS = [BASE_DIR / 'static']
+STATICFILES_DIRS = [BASE_DIR / 'static']   # было TATICFILES_DIRS — опечатка
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Настройки CKEditor 5 — этого блока у тебя не было, из-за него падала админка
+CKEDITOR_5_CONFIGS = {
+    "default": {
+        "language": "ru",
+        "toolbar": ["heading", "|", "bold", "italic", "underline", "strikethrough", "|",
+                    "link", "bulletedList", "numberedList", "|",
+                    "blockQuote", "insertTable", "|",
+                    "undo", "redo", "|",
+                    "imageUpload", "mediaEmbed", "|", "removeFormat"],
+    },
+}
+CKEDITOR_5_FILE_UPLOAD_PERMISSION = "authenticated"
