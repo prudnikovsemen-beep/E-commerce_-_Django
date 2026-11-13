@@ -80,7 +80,34 @@ class Product(models.Model):
     def __str__(self):
         return f"{self.name} ({self.price} ₽)"
 
-# --- Новая модель ---
+
+class ProductImage(models.Model):
+    """Дополнительные фотографии товара (галерея)."""
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="images",  # обращение: product.images.all()
+        verbose_name="товар",
+    )
+    image = models.ImageField(
+        upload_to="products/gallery/",
+        verbose_name="фото",
+    )
+    description = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name="описание фото",
+    )
+
+    class Meta:
+        verbose_name = "фото товара"
+        verbose_name_plural = "фотографии товара"
+
+    def __str__(self):
+        return f"Фото для «{self.product.name}»"
+
+
 class ContactInfo(models.Model):
     phone = models.CharField("Телефон", max_length=50, blank=True)
     email = models.EmailField("Email", blank=True)
