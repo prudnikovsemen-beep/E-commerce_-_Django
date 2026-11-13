@@ -1,27 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <!-- СНАЧАЛА СТАТЬИ -->
-  <section class="mt-4">
-    <h2>Последние статьи</h2>
-    <div class="row">
-      {% for article in latest_articles %}
-        <div class="col-md-4 mb-3">
-          <div class="card h-100">
-            {% if article.preview %}
-              <img src="{{ article.preview.url }}" class="card-img-top" alt="{{ article.title }}">
-            {% endif %}
-            <div class="card-body">
-              <h5 class="card-title">{{ article.title }}</h5>
-              <a href="{% url 'blog:blog_detail' article.pk %}" class="btn btn-outline-secondary">Читать далее</a>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-  </section>
 
-  <!-- ПОТОМ ТОВАРЫ -->
+  <!-- ТОВАРЫ -->
   <section class="mt-4">
     <h2>Последние товары</h2>
     <div class="row">

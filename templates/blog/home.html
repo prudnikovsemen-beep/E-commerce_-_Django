@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная — Магазин камней{% endblock %}
+
+{% block content %}
+  <!-- Карусель статей -->
+  <section class="mb-5">
+    <h2 class="fw-bold mb-4 border-bottom pb-2">Последние статьи</h2>
+
+    <div id="articlesCarousel" class="carousel slide" data-bs-ride="carousel">
+      <!-- Индикаторы (точки) -->
+      <div class="carousel-indicators">
+        {% for article in latest_articles %}
+          <button type="button" data-bs-target="#articlesCarousel"
+                  data-bs-slide-to="{{ forloop.counter0 }}"
+                  {% if forloop.first %}class="active" aria-current="true"{% endif %}
+                  aria-label="Статья {{ forloop.counter }}"></button>
+        {% endfor %}
+      </div>
+
+      <!-- Слайды -->
+      <div class="carousel-inner rounded">
+        {% for article in latest_articles %}
+          <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            {% if article.preview %}
+              <img src="{{ article.preview.url }}" class="d-block w-100" alt="{{ article.title }}"
+                   style="height: 380px; object-fit: cover;">
+            {% else %}
+              <div class="bg-light d-flex align-items-center justify-content-center" style="height: 380px;">
+                <span class="text-muted fs-4">Нет обложки</span>
+              </div>
+            {% endif %}
+
+            <div class="carousel-caption d-flex flex-column align-items-center py-2 px-2"
+                 style="background: rgba(0,0,0,.65); border-radius: .5rem;">
+              <h5 class="mb-2">{{ article.title }}</h5>
+              <a href="{% url 'blog:blog_detail' article.pk %}" class="btn btn-outline-light btn-sm">
+                Читать далее
+              </a>
+            </div>
+          </div>
+        {% empty %}
+          <div class="carousel-item active">
+            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 380px;">
+              <span class="text-muted">Пока нет опубликованных статей.</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Стрелки -->
+      <button class="carousel-control-prev" type="button"
+              data-bs-target="#articlesCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Назад</span>
+      </button>
+      <button class="carousel-control-next" type="button"
+              data-bs-target="#articlesCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Вперёд</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Товары -->
+  <section>
+    <h2 class="fw-bold mb-4 border-bottom pb-2">Последние товары</h2>
+    <div class="row">
+      {% for product in latest_products %}
+        <div class="col-md-4 col-lg-3 mb-4">
+          <div class="card h-100 shadow-sm border-0">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 220px; object-fit: cover;">
+            {% else %}
+              <div class="bg-light d-flex align-items-center justify-content-center" style="height: 220px;">
+                <span class="text-muted">Нет фото</span>
+              </div>
+            {% endif %}
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title fw-bold">{{ product.name }}</h5>
+              <p class="card-text text-truncate" title="{{ product.description }}">
+                {{ product.description|truncatechars:80 }}
+              </p>
+              <p class="fw-bold text-primary">{{ product.price }} ₽</p>
+              <div class="mt-auto">
+                <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-primary w-100">Подробнее</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12 text-center py-5 text-muted">Сейчас нет товаров в продаже.</div>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}

@@ -11,25 +11,58 @@
 <body>
     <!-- ШАПКА -->
     <header class="site-header">
-        <div class="header-inner">
-            <a href="/" class="logo">ЛОГОТИП</a>
-            <nav class="main-nav">
-                <a href="{% url 'catalog:product_list' %}">Каталог</a>
-                <a href="{% url 'catalog:contacts' %}">Контакты</a>
-                <a href="{% url 'blog:blog_list' %}">Блог</a>
-            </nav>
-            <a href="#" class="cart-link">Корзина</a>
+        <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
+            <div class="container-fluid">
+                <!-- Логотип -->
+                <a href="{% url 'home' %}" class="navbar-brand fw-bold text-dark">ЛОГОТИП</a>
+
+                <!-- КОРЗИНА для мобильных: видна только до 768px -->
+                <a href="#" class="btn btn-outline-primary btn-sm ms-auto me-2 d-md-none">Корзина</a>
+
+                <!-- Кнопка-бургер -->
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#mainNav"
+                        aria-controls="mainNav" aria-expanded="false" aria-label="Открыть меню">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Меню -->
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="{% url 'catalog:catalog' %}">Каталог</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="{% url 'catalog:contacts' %}">Контакты</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="{% url 'blog:blog_list' %}">Блог</a>
+                        </li>
+                    </ul>
+
+                    <!-- ПОИСК + КОРЗИНА для ПК (от 768px и шире) -->
+                    <div class="d-none d-md-flex align-items-center gap-3">
+                        <form action="#" method="get" class="d-flex">
+                            <input type="text" name="q" class="form-control form-control-sm me-1" placeholder="Поиск..." required>
+                            <button type="submit" class="btn btn-sm btn-primary">Найти</button>
+                        </form>
+                        <a href="#" class="btn btn-outline-primary btn-sm">Корзина</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Поиск для мобильных: отдельный блок под шапкой -->
+        <div class="container-fluid px-3 py-2 d-md-none">
+            <form class="search-form d-flex justify-content-center gap-2">
+                <input type="text" name="q" class="form-control" placeholder="Поиск по товарам…" required>
+                <button type="submit" class="btn btn-primary">Найти</button>
+            </form>
         </div>
     </header>
 
-    <!-- СТРОКА ПОИСКА -->
-    <form class="search-form" action="#" method="get">
-        <input type="text" name="q" placeholder="Поиск по товарам…" required>
-        <button type="submit">Найти</button>
-    </form>
-
-    <!-- ОСНОВНОЙ КОНТЕНТ -->
-    <main class="container">
+    <!-- КОНТЕНТ СТРАНИЦЫ -->
+    <main class="container my-4">
         {% block content %}{% endblock %}
     </main>
 
@@ -43,5 +76,8 @@
         </div>
         <p class="copyright">&copy; 2024 Магазин. Все права защищены.</p>
     </footer>
+
+     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

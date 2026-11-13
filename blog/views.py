@@ -1,10 +1,20 @@
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
+from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-
 from django.conf import settings
 from blog.models import Blog
 
+from catalog.models import Product  # если модель товаров называется иначе — поправьте
+
+
+def home(request):
+    latest_articles = Blog.objects.filter(is_published=True).order_by('-created_at')[:3]
+    latest_products = Product.objects.all()[:4]
+    return render(request, 'blog/home.html', {
+        'latest_articles': latest_articles,
+        'latest_products': latest_products,
+    })
 
 class BlogListView(ListView):
     model = Blog

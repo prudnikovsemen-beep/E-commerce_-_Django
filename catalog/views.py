@@ -4,6 +4,9 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Product, ContactInfo
 from blog.models import Blog
 
+from django.shortcuts import render, get_object_or_404
+from .models import Product, ContactInfo, Category
+
 
 class ProductListView(ListView):
     model = Product
@@ -55,3 +58,31 @@ class ContactsView(TemplateView):
         # Берём единственную запись с контактами (или None, если ещё не создана)
         context["contact"] = ContactInfo.objects.first()
         return context
+
+
+def catalog_view(request):
+    categories = Category.objects.all()
+    products = Product.objects.filter(is_active=True).order_by("-created_at")[:4]
+
+    context = {
+        "categories": categories,
+        "products": products,
+    }
+    return render(request, "catalog/catalog.html", context)
+
+
+def category_detail_view(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    products = Product.objects.filter(category=category, is_active=True)
+    return render(
+        request,
+        "catalog/category_detail.html",
+        {"category": category, "products": products},
+    )
+
+
+class AllProductsView(ListView):
+    model = Product
+    template_name = "catalog/all_products.html"
+    context_object_name = "products"
+    queryset = Product.objects.filter(is_active=True)

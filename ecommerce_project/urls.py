@@ -2,10 +2,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from blog import views as blog_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("catalog.urls", "catalog")),
+    path("", blog_views.home, name="home"),
+    path("catalog/", include("catalog.urls", "catalog")),
     path("blogs/", include("blog.urls", "blog")),
     path("ckeditor5/", include("django_ckeditor_5.urls")),
 ]

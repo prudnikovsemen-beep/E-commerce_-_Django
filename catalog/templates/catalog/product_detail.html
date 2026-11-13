@@ -1,10 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} — Магазин камней{% endblock %}
+
+{% block content %}
+<h2 class="fw-bold mb-4 border-bottom pb-2">{{ product.name }}</h2>
+
+<div class="row g-4">
+  <!-- Левая колонка: большое фото + миниатюры -->
+  <div class="col-md-6">
+    {% if product.image %}
+      <!-- Большое фото со стрелками -->
+      <div class="position-relative mb-3">
+        <img id="main-image" src="{{ product.image.url }}" alt="{{ product.name }}"
+             class="img-fluid rounded shadow-sm"
+             style="width: 100%; max-height: 480px; object-fit: cover;">
+
+        <!-- Стрелка назад -->
+        <button type="button" id="prevPhoto"
+                class="btn btn-light position-absolute top-50 start-0 translate-middle-y ms-2 rounded-circle shadow-sm"
+                aria-label="Предыдущее фото" style="width: 40px; height: 40px;">‹</button>
+
+        <!-- Стрелка вперёд -->
+        <button type="button" id="nextPhoto"
+                class="btn btn-light position-absolute top-50 end-0 translate-middle-y me-2 rounded-circle shadow-sm"
+                aria-label="Следующее фото" style="width: 40px; height: 40px;">›</button>
+      </div>
+    {% else %}
+      <div class="bg-light d-flex align-items-center justify-content-center rounded mb-3"
+           style="height: 400px;">
+        <span class="text-muted">Фото отсутствует</span>
+      </div>
+    {% endif %}
+
+    <!-- Ряд миниатюр: основное фото + галерея из ProductImage -->
+    <div class="d-flex gap-2 overflow-auto">
+      {% if product.image %}
+        <img src="{{ product.image.url }}" alt="Основное фото"
+             class="img-thumbnail" style="cursor: pointer; flex: 0 0 80px; width: 80px; height: 80px; object-fit: cover;"
+             onclick="changeMainImage('{{ product.image.url }}')">
+      {% endif %}
+      {% for img in product.images.all %}
+        <img src="{{ img.image.url }}" alt="{{ img.description|default:'Фото' }}"
+             class="img-thumbnail" style="cursor: pointer; flex: 0 0 80px; width: 80px; height: 80px; object-fit: cover;"
+             onclick="changeMainImage('{{ img.image.url }}')">
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Правая колонка: описание и цена -->
+  <div class="col-md-6">
+    <p class="text-muted mb-2">
+      Категория: {{ product.category.name }}
+    </p>
+    <h3 class="text-primary fw-bold mb-3">{{ product.price }} ₽</h3>
+
+    <p>{{ product.description|linebreaks }}</p>
+
+    <ul class="list-unstyled mb-4">
+      <li><strong>Наличие:</strong>
+        {% if product.stock > 0 %}
+          <span class="text-success">в наличии ({{ product.stock }})</span>
+        {% else %}
+          <span class="text-danger">нет в наличии</span>
+        {% endif %}
+      </li>
+    </ul>
+
+    <a href="{% url 'catalog:product_list' %}" class="btn btn-outline-secondary">
+      ← Назад в каталог
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Список всех фото товара: основное + галерея
+  const photoUrls = [
+    {% if product.image %}'{{ product.image.url }}',{% endif %}
+    {% for img in product.images.all %}'{{ img.image.url }}',{% endfor %}
+  ];
+  let currentPhoto = 0;
+
+  function showPhoto(index) {
+    if (photoUrls.length === 0) return;
+    // Зацикливаем: после последнего фото идёт первое
+    currentPhoto = (index + photoUrls.length) % photoUrls.length;
+    document.getElementById('main-image').src = photoUrls[currentPhoto];
+  }
+
+  function changeMainImage(src) {
+    // Клик по миниатюре: находим её индекс в списке
+    const idx = photoUrls.indexOf(src);
+    if (idx !== -1) showPhoto(idx);
+  }
+
+  document.getElementById('prevPhoto')?.addEventListener('click', () => showPhoto(currentPhoto - 1));
+  document.getElementById('nextPhoto')?.addEventListener('click', () => showPhoto(currentPhoto + 1));
+</script>
+{% endblock %}
