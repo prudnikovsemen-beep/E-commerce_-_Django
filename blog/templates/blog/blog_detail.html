@@ -2,7 +2,8 @@
 
 {% block content %}
 <div class="container my-5">
-    <!-- Заголовок статьи -->
+<!--Блг «Лента», «Статьи», «Видео»-->
+{% include "blog/includes/blog_nav.html" %}    <!-- Заголовок статьи -->
     <h1 class="mb-2">{{ object.title }}</h1>
     <p class="text-muted">Дата {{ object.created_at|date:"d.m.Y" }} · Просмотров: {{ object.views_count }}</p>
     <hr>

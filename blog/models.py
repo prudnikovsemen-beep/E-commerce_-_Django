@@ -4,12 +4,23 @@ from django_ckeditor_5.fields import CKEditor5Field
 
 
 class Blog(models.Model):
+    TYPE_CHOICES = (
+        ("article", "Статья"),
+        ("video", "Видео"),
+    )
+
     title = models.CharField(max_length=150, verbose_name="заголовок")
     content = CKEditor5Field(verbose_name="содержимое", config_name="default")
     preview = models.ImageField(upload_to="blog/previews/", verbose_name="превью")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="дата создания")
     is_published = models.BooleanField(default=True, verbose_name="признак публикации")
     views_count = models.PositiveIntegerField(default=0, verbose_name="количество просмотров")
+    type = models.CharField(
+        "тип публикации",
+        max_length=10,
+        choices=TYPE_CHOICES,
+        default="article",
+    )
 
     def __str__(self):
         return self.title

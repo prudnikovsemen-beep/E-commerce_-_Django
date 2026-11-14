@@ -25,12 +25,26 @@ class BlogListView(ListView):
     template_name = "blog/blog_list.html"
 
     def get_queryset(self):
-        # выводим только опубликованные статьи
-        return Blog.objects.filter(is_published=True)
+        # ЛЕНТА: все опубликованные публикации (статьи + видео) по дате
+        return Blog.objects.filter(is_published=True).order_by("-created_at")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # настройки приветствия (модель BlogSettings, редактируются в админке)
+        context["settings"] = BlogSettings.objects.first()
+        return context
+
+
+class BlogArticleListView(ListView):
+    model = Blog
+    template_name = "blog/blog_list.html"
+
+    def get_queryset(self):
+        # СТАТЬИ: только публикации типа "статья"
+        return Blog.objects.filter(is_published=True, type="article").order_by("-created_at")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context["settings"] = BlogSettings.objects.first()
         return context
 
@@ -82,14 +96,14 @@ class BlogDetailView(DetailView):
 
 class BlogCreateView(CreateView):
     model = Blog
-    fields = ("title", "content", "preview", "is_published")
+    fields = ("title", "content", "preview", "is_published", "type")
     template_name = "blog/blog_form.html"
     success_url = reverse_lazy("blog:blog_list")
 
 
 class BlogUpdateView(UpdateView):
     model = Blog
-    fields = ("title", "content", "preview", "is_published")
+    fields = ("title", "content", "preview", "is_published", "type")
     template_name = "blog/blog_form.html"
 
     def get_success_url(self):
