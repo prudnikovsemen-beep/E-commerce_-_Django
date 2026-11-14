@@ -1,3 +1,4 @@
+from .models import Blog, BlogSettings
 from django.contrib import admin
 from .models import Blog
 
@@ -9,3 +10,17 @@ class BlogAdmin(admin.ModelAdmin):
     list_filter = ("is_published", "created_at")
     search_fields = ("title", "content")
     ordering = ("-created_at",)
+
+
+@admin.register(BlogSettings)
+class BlogSettingsAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ('Основное', {
+            'fields': ('title', 'subtitle'),
+        }),
+    )
+    # Запрещаем удаление, чтобы случайно не стереть настройки
+    actions = None
+
+    def has_delete_permission(self, request, obj=None):
+        return False

@@ -21,3 +21,19 @@ class Blog(models.Model):
     def get_absolute_url(self):
         return reverse("blog:blog_detail", args=[self.pk])
 
+
+class BlogSettings(models.Model):
+    """
+    Настройки блога. Создаётся 1 раз в админке.
+    Поля можно менять через админку без правки HTML.
+    """
+    title = models.CharField(max_length=200, verbose_name="Заголовок приветствия", default="Раздел Блога")
+    subtitle = models.TextField(verbose_name="Подзаголовок / описание",
+                                default="Здесь мы публикуем статьи о камнях, огранке и новостях проекта Skystore.")
+
+    class Meta:
+        verbose_name = "Настройки блога"
+        verbose_name_plural = "Настройки блога"
+
+    def __str__(self):
+        return "Настройки блога"

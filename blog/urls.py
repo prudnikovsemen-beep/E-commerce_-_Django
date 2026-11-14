@@ -11,9 +11,9 @@ from blog.views import (
 app_name = "blog"
 
 urlpatterns = [
-    path("", BlogListView.as_view(), name="blog_list"),
-    path("<int:pk>/", BlogDetailView.as_view(), name="blog_detail"),
-    path("create/", BlogCreateView.as_view(), name="blog_create"),
-    path("<int:pk>/update/", BlogUpdateView.as_view(), name="blog_update"),
-    path("<int:pk>/delete/", BlogDeleteView.as_view(), name="blog_delete"),
+    path("", BlogListView.as_view(), name="blog_list"),             # /blogs/ — список статей
+    path("create/", BlogCreateView.as_view(), name="blog_create"),  # /blogs/create/ — создание
+    path("<int:pk>/", BlogDetailView.as_view(), name="blog_detail"), # /blogs/<id>/ — просмотр
+    path("<int:pk>/update/", BlogUpdateView.as_view(), name="blog_update"), # /blogs/<id>/update/
+    path("<int:pk>/delete/", BlogDeleteView.as_view(), name="blog_delete"), # /blogs/<id>/delete/
 ]

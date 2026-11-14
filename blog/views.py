@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.conf import settings
-from blog.models import Blog
+from blog.models import Blog, BlogSettings
 
 from catalog.models import Product  # если модель товаров называется иначе — поправьте
 
@@ -16,6 +16,7 @@ def home(request):
         'latest_products': latest_products,
     })
 
+
 class BlogListView(ListView):
     model = Blog
     template_name = "blog/blog_list.html"
@@ -23,6 +24,12 @@ class BlogListView(ListView):
     def get_queryset(self):
         # выводим только опубликованные статьи
         return Blog.objects.filter(is_published=True)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # настройки приветствия (модель BlogSettings, редактируются в админке)
+        context["settings"] = BlogSettings.objects.first()
+        return context
 
 
 class BlogDetailView(DetailView):
