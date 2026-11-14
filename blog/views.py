@@ -1,8 +1,11 @@
+import re
+
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.conf import settings
+
 from blog.models import Blog, BlogSettings
 
 from catalog.models import Product  # если модель товаров называется иначе — поправьте
@@ -43,6 +46,29 @@ class BlogDetailView(DetailView):
         obj.save(update_fields=["views_count"])
         self._congratulate_if_needed(obj)
         return obj
+
+    def _find_related_products(self, title):
+        """Ищем товары по словам из заголовка статьи."""
+        # слова от 4 букв — предлоги и союзы пропускаем
+        words = re.findall(r"[а-яёА-ЯЁa-zA-Z]{4,}", title)
+        matched_ids = set()
+        for word in words:
+            hits = Product.objects.filter(name__icontains=word)
+            matched_ids.update(hits.values_list("pk", flat=True))
+        return Product.objects.filter(pk__in=matched_ids)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # автоматический подбор товаров по заголовку статьи
+        found = self._find_related_products(self.object.title)
+        # в наличии = остаток на складе больше 0 и товар в продаже
+        in_stock = found.filter(stock__gt=0, is_active=True)[:6]
+
+        context["products_carousel"] = in_stock
+        # карусель показываем только если нашлись товары в наличии
+        context["show_carousel"] = in_stock.exists()
+        return context
 
     def _congratulate_if_needed(self, obj):
         if obj.views_count == 100:
