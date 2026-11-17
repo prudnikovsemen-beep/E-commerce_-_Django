@@ -1,3 +1,4 @@
+# catalog/models.py
 from django.db import models
 from django.utils.text import slugify
 from django.utils import timezone
@@ -7,6 +8,12 @@ class Category(models.Model):
     name = models.CharField(max_length=200, verbose_name="Название категории")
     slug = models.SlugField(unique=True, blank=True, verbose_name="URL-ярлык")
     description = models.TextField(blank=True, null=True, verbose_name="Описание категории")
+    image = models.ImageField(
+        upload_to="categories/",
+        blank=True,
+        null=True,
+        verbose_name="Изображение категории"
+    )
     parent = models.ForeignKey(
         'self',
         null=True,
