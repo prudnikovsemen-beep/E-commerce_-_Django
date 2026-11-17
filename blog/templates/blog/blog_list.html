@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- 1. Приветствие (как на схеме в блокноте) -->
 <!-- 1. Приветствие из админки (модель BlogSettings) -->
 <section class="py-5 text-center container">
     <h1 class="display-4 fw-bold">{{ settings.title|default:"Раздел Блога" }}</h1>
@@ -32,7 +31,9 @@
                     <h5 class="card-title">{{ blog.title }}</h5>
                     <!-- striptags убирает HTML-теги из CKEditor, truncatechars обрезает до 120 символов -->
                     <p class="card-text">{{ blog.content|striptags|truncatechars:120 }}</p>
-                    <a href="{% url 'blog:blog_detail' blog.pk %}" class="btn btn-primary btn-sm">Читать далее</a>
+                    <a href="{% url 'blog:blog_detail' blog.pk %}" class="btn btn-primary btn-sm">
+                        {% if blog.type == 'video' %}Смотреть видео{% else %}Читать далее{% endif %}
+                    </a>
                 </div>
                 <div class="card-footer bg-white border-top-0 d-flex justify-content-between">
                     <small class="text-muted">{{ blog.created_at|date:"d.m.Y" }}</small>
@@ -47,3 +48,4 @@
     {% endif %}
 </div>
 {% endblock %}
+
