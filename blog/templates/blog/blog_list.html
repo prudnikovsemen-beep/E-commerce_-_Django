@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<!-- Поднавигация: Лента / Статьи / Видео -->
+{% include "blog/includes/blog_nav.html" %}
+
 <!-- 1. Приветствие из админки (модель BlogSettings) -->
 <section class="py-5 text-center container">
     <h1 class="display-4 fw-bold">{{ settings.title|default:"Раздел Блога" }}</h1>
@@ -9,8 +12,7 @@
 
 <div class="container">
     <!-- 2. Лента статей (Сетка Bootstrap) -->
-    <h2 class="mb-4 border-bottom pb-2">Лента статей</h2>
-
+    <h2 class="mb-4 border-bottom pb-2"></h2>
     {% if object_list %}
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for blog in object_list %}
@@ -48,4 +50,3 @@
     {% endif %}
 </div>
 {% endblock %}
-

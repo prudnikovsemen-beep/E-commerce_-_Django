@@ -1,5 +1,33 @@
-# blog/templates/blog/blog_form.html
+<!--blog/templates/blog/blog_form.html -->
 {% extends 'base.html' %}
 {% block title %}Новая статья{% endblock %}
 {% block content %}
-    <h1>{% if object %}Редактировать{% else %
+    <!-- Поднавигация: Лента / Статьи / Видео -->
+    {% include "blog/includes/blog_nav.html" %}
+
+    <div class="container my-4" style="max-width: 720px;">
+        <h1 class="mb-4">{% if object %}Редактировать запись{% else %}Новая запись{% endif %}</h1>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label fw-bold">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <div class="form-text">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary">
+                {% if object %}Сохранить{% else %}Создать{% endif %}
+            </button>
+            <a href="{% url 'blog:blog_list' %}" class="btn btn-outline-secondary">Отмена</a>
+        </form>
+    </div>
+{% endblock %}
