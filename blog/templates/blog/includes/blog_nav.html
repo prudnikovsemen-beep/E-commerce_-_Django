@@ -8,8 +8,8 @@
         <a class="nav-link {% if '/articles' in request.path %}active{% endif %}"
            href="{% url 'blog:blog_articles' %}">Статьи</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link {% if '/videos' in request.path %}active{% endif %}"
-           href="#">Видео</a>
+        <li class="nav-item">
+        <a class="nav-link {% if '/video' in request.path %}active{% endif %}"
+           href="{% url 'blog:blog_video_list' %}">Видео</a>
     </li>
 </ul>

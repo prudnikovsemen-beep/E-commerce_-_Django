@@ -1,3 +1,4 @@
+# blog/views.py
 import re
 
 from django.core.mail import send_mail
@@ -7,8 +8,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.conf import settings
 
 from blog.models import Blog, BlogSettings
-
-from catalog.models import Product  # если модель товаров называется иначе — поправьте
+from catalog.models import Product
 
 
 def home(request):
@@ -25,12 +25,10 @@ class BlogListView(ListView):
     template_name = "blog/blog_list.html"
 
     def get_queryset(self):
-        # ЛЕНТА: все опубликованные публикации (статьи + видео) по дате
         return Blog.objects.filter(is_published=True).order_by("-created_at")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # настройки приветствия (модель BlogSettings, редактируются в админке)
         context["settings"] = BlogSettings.objects.first()
         return context
 
@@ -40,8 +38,21 @@ class BlogArticleListView(ListView):
     template_name = "blog/blog_list.html"
 
     def get_queryset(self):
-        # СТАТЬИ: только публикации типа "статья"
         return Blog.objects.filter(is_published=True, type="article").order_by("-created_at")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["settings"] = BlogSettings.objects.first()
+        return context
+
+
+class BlogVideoListView(ListView):
+    model = Blog
+    template_name = "blog/blog_list.html"
+
+    def get_queryset(self):
+        # ВИДЕО: только публикации типа "видео"
+        return Blog.objects.filter(is_published=True, type="video").order_by("-created_at")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -55,15 +66,12 @@ class BlogDetailView(DetailView):
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
-        # увеличиваем счётчик просмотров при открытии статьи
         obj.views_count += 1
         obj.save(update_fields=["views_count"])
         self._congratulate_if_needed(obj)
         return obj
 
     def _find_related_products(self, title):
-        """Ищем товары по словам из заголовка статьи."""
-        # слова от 4 букв — предлоги и союзы пропускаем
         words = re.findall(r"[а-яёА-ЯЁa-zA-Z]{4,}", title)
         matched_ids = set()
         for word in words:
@@ -73,14 +81,9 @@ class BlogDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        # автоматический подбор товаров по заголовку статьи
         found = self._find_related_products(self.object.title)
-        # в наличии = остаток на складе больше 0 и товар в продаже
         in_stock = found.filter(stock__gt=0, is_active=True)[:6]
-
         context["products_carousel"] = in_stock
-        # карусель показываем только если нашлись товары в наличии
         context["show_carousel"] = in_stock.exists()
         return context
 
@@ -96,18 +99,18 @@ class BlogDetailView(DetailView):
 
 class BlogCreateView(CreateView):
     model = Blog
-    fields = ("title", "content", "preview", "is_published", "type")
+    # порядок важен: сначала тип, потом видео (если тип = видео), потом остальное
+    fields = ("title", "type", "video_url", "content", "preview", "is_published")
     template_name = "blog/blog_form.html"
     success_url = reverse_lazy("blog:blog_list")
 
 
 class BlogUpdateView(UpdateView):
     model = Blog
-    fields = ("title", "content", "preview", "is_published", "type")
+    fields = ("title", "type", "video_url", "content", "preview", "is_published")
     template_name = "blog/blog_form.html"
 
     def get_success_url(self):
-        # после редактирования ведём пользователя на отредактированную статью
         return reverse_lazy("blog:blog_detail", args=[self.object.pk])
 
 

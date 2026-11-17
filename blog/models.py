@@ -22,6 +22,13 @@ class Blog(models.Model):
         default="article",
     )
 
+    # Поле для видео-публикаций
+    video_url = models.URLField(
+        "ссылка на видео (VK, RuTube, YouTube)",
+        blank=True,
+        help_text="Вставляйте embed-ссылку, например https://rutube.ru/play/embed/..."
+    )
+
     def __str__(self):
         return self.title
 
