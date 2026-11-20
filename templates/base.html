@@ -16,8 +16,9 @@
                 <!-- Логотип -->
                 <a href="{% url 'home' %}" class="navbar-brand fw-bold text-dark">ЛОГОТИП</a>
 
-                <!-- КОРЗИНА для мобильных: видна только до 768px -->
-                <a href="#" class="btn btn-outline-primary btn-sm ms-auto me-2 d-md-none">Корзина</a>
+                <!-- ЛИЧНЫЙ КАБИНЕТ + КОРЗИНА для мобильных: видны только до 768px -->
+                <a href="/admin/" class="btn btn-outline-primary btn-sm ms-auto me-2 d-md-none">Личный кабинет</a>
+                <a href="#" class="btn btn-outline-primary btn-sm d-md-none">Корзина</a>
 
                 <!-- Кнопка-бургер -->
                 <button class="navbar-toggler" type="button"
@@ -40,12 +41,13 @@
                         </li>
                     </ul>
 
-                    <!-- ПОИСК + КОРЗИНА для ПК (от 768px и шире) -->
+                    <!-- ЛИЧНЫЙ КАБИНЕТ + ПОИСК + КОРЗИНА для ПК (от 768px и шире) -->
                     <div class="d-none d-md-flex align-items-center gap-3">
                         <form action="#" method="get" class="d-flex">
                             <input type="text" name="q" class="form-control form-control-sm me-1" placeholder="Поиск..." required>
                             <button type="submit" class="btn btn-sm btn-primary">Найти</button>
                         </form>
+                        <a href="/admin/" class="btn btn-outline-primary btn-sm">Личный кабинет</a>
                         <a href="#" class="btn btn-outline-primary btn-sm">Корзина</a>
                     </div>
                 </div>
@@ -72,7 +74,6 @@
             <a href="{% url 'catalog:contacts' %}">О нас</a>
             <a href="#">Доставка</a>
             <a href="#">Возврат</a>
-            <a href="/admin/">Админка</a>
         </div>
         <p class="copyright">&copy; 2024 Магазин. Все права защищены.</p>
     </footer>
