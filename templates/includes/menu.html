@@ -1,5 +1,10 @@
 <nav>
-    <a href="{% url 'catalog:product_list' %}">Каталог</a>
-    <a href="{% url 'catalog:contacts' %}">Контакты</a>
-    <a href="{% url 'blog:blog_list' %}">Блог</a>
+    <a class="{% if '/catalog' in request.path %}active{% endif %}"
+       href="{% url 'catalog:product_list' %}">Каталог</a>
+
+    <a class="{% if '/contacts' in request.path %}active{% endif %}"
+       href="{% url 'catalog:contacts' %}">Контакты</a>
+
+    <a class="{% if '/blogs' in request.path %}active{% endif %}"
+       href="{% url 'blog:blog_list' %}">Блог</a>
 </nav>
