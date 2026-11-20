@@ -1,16 +1,52 @@
-{% extends "base.html" %}
-
-{% block title %}Статьи блога{% endblock %}
+{% extends 'base.html' %}
 
 {% block content %}
-<h1>Статьи блога</h1>
+<!-- Поднавигация: Лента / Статьи / Видео -->
+{% include "blog/includes/blog_nav.html" %}
 
-{% for article in object_list %}
-    <h2><a href="{% url 'blog:blog_detail' article.pk %}">{{ article.title }}</a></h2>
-    <p>{{ article.created_at|date:"d.m.Y" }}</p>
-{% empty %}
-    <p>Статей пока нет.</p>
-{% endfor %}
+<!-- 1. Приветствие из админки (модель BlogSettings) -->
+<section class="py-5 text-center container">
+    <h1 class="display-4 fw-bold">{{ settings.title|default:"Раздел Блога" }}</h1>
+    <p class="lead text-muted">{{ settings.subtitle|default:"Здесь мы делимся гайдами, разборами плагинов и новостями проекта Skystore." }}</p>
+</section>
 
-<a href="{% url 'blog:blog_create' %}">Создать статью</a>
+<div class="container">
+    <!-- 2. Лента статей (Сетка Bootstrap) -->
+    <h2 class="mb-4 border-bottom pb-2"></h2>
+    {% if object_list %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for blog in object_list %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <!-- Фото из статьи (блок "фото из статьи" на схеме) -->
+                {% if blog.preview %}
+                <img src="{{ blog.preview.url }}" class="card-img-top" alt="{{ blog.title }}"
+                     style="height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <span class="text-muted">Нет фото</span>
+                </div>
+                {% endif %}
+
+                <div class="card-body">
+                    <!-- Заголовок и текст статьи -->
+                    <h5 class="card-title">{{ blog.title }}</h5>
+                    <!-- striptags убирает HTML-теги из CKEditor, truncatechars обрезает до 120 символов -->
+                    <p class="card-text">{{ blog.content|striptags|truncatechars:120 }}</p>
+                    <a href="{% url 'blog:blog_detail' blog.pk %}" class="btn btn-primary btn-sm">
+                        {% if blog.type == 'video' %}Смотреть видео{% else %}Читать далее{% endif %}
+                    </a>
+                </div>
+                <div class="card-footer bg-white border-top-0 d-flex justify-content-between">
+                    <small class="text-muted">{{ blog.created_at|date:"d.m.Y" }}</small>
+                    <small class="text-muted">Просмотров: {{ blog.views_count }}</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center text-muted">Пока нет опубликованных статей. Загляните позже!</p>
+    {% endif %}
+</div>
 {% endblock %}

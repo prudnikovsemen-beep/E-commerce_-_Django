@@ -1,9 +1,23 @@
+# blog/views.py
+import re
+
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
+from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-
 from django.conf import settings
-from blog.models import Blog
+
+from blog.models import Blog, BlogSettings
+from catalog.models import Product
+
+
+def home(request):
+    latest_articles = Blog.objects.filter(is_published=True).order_by('-created_at')[:3]
+    latest_products = Product.objects.all()[:4]
+    return render(request, 'blog/home.html', {
+        'latest_articles': latest_articles,
+        'latest_products': latest_products,
+    })
 
 
 class BlogListView(ListView):
@@ -11,8 +25,39 @@ class BlogListView(ListView):
     template_name = "blog/blog_list.html"
 
     def get_queryset(self):
-        # выводим только опубликованные статьи
-        return Blog.objects.filter(is_published=True)
+        return Blog.objects.filter(is_published=True).order_by("-created_at")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["settings"] = BlogSettings.objects.first()
+        return context
+
+
+class BlogArticleListView(ListView):
+    model = Blog
+    template_name = "blog/blog_list.html"
+
+    def get_queryset(self):
+        return Blog.objects.filter(is_published=True, type="article").order_by("-created_at")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["settings"] = BlogSettings.objects.first()
+        return context
+
+
+class BlogVideoListView(ListView):
+    model = Blog
+    template_name = "blog/blog_list.html"
+
+    def get_queryset(self):
+        # ВИДЕО: только публикации типа "видео"
+        return Blog.objects.filter(is_published=True, type="video").order_by("-created_at")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["settings"] = BlogSettings.objects.first()
+        return context
 
 
 class BlogDetailView(DetailView):
@@ -21,11 +66,26 @@ class BlogDetailView(DetailView):
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
-        # увеличиваем счётчик просмотров при открытии статьи
         obj.views_count += 1
         obj.save(update_fields=["views_count"])
         self._congratulate_if_needed(obj)
         return obj
+
+    def _find_related_products(self, title):
+        words = re.findall(r"[а-яёА-ЯЁa-zA-Z]{4,}", title)
+        matched_ids = set()
+        for word in words:
+            hits = Product.objects.filter(name__icontains=word)
+            matched_ids.update(hits.values_list("pk", flat=True))
+        return Product.objects.filter(pk__in=matched_ids)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        found = self._find_related_products(self.object.title)
+        in_stock = found.filter(stock__gt=0, is_active=True)[:6]
+        context["products_carousel"] = in_stock
+        context["show_carousel"] = in_stock.exists()
+        return context
 
     def _congratulate_if_needed(self, obj):
         if obj.views_count == 100:
@@ -39,18 +99,18 @@ class BlogDetailView(DetailView):
 
 class BlogCreateView(CreateView):
     model = Blog
-    fields = ("title", "content", "preview", "is_published")
+    # порядок важен: сначала тип, потом видео (если тип = видео), потом остальное
+    fields = ("title", "type", "video_url", "content", "preview", "is_published")
     template_name = "blog/blog_form.html"
     success_url = reverse_lazy("blog:blog_list")
 
 
 class BlogUpdateView(UpdateView):
     model = Blog
-    fields = ("title", "content", "preview", "is_published")
+    fields = ("title", "type", "video_url", "content", "preview", "is_published")
     template_name = "blog/blog_form.html"
 
     def get_success_url(self):
-        # после редактирования ведём пользователя на отредактированную статью
         return reverse_lazy("blog:blog_detail", args=[self.object.pk])
 
 

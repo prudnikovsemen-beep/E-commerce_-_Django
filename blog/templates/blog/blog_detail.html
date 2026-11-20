@@ -1,11 +1,73 @@
-# blog/templates/blog/blog_detail.html
 {% extends 'base.html' %}
-{% block title %}{{ object.title }}{% endblock %}
+
 {% block content %}
-    <article>
-        <h1>{{ object.title }}</h1>
-        <p>Дата: {{ object.created_at|date:"d.m.Y" }}</p>
-        <div>{{ object.content|linebreaks }}</div>
-    </article>
-    <a href="{% url 'blog:blog_list' %}">← Назад к списку</a>
+<div class="container my-5">
+    <!-- Поднавигация: Лента / Статьи / Видео -->
+    {% include "blog/includes/blog_nav.html" %}
+
+    <!-- Заголовок и метаданные -->
+    <h1 class="mb-2">{{ object.title }}</h1>
+
+    <p class="text-muted">
+        Дата {{ object.created_at|date:"d.m.Y H:i" }} ·
+        {% if object.type == "video" %}
+            <span class="badge bg-danger text-white">Видео</span>
+        {% else %}
+            <span class="badge bg-primary text-white">Статья</span>
+        {% endif %}
+        · Просмотров: {{ object.views_count }}
+    </p>
+    <hr class="my-4">
+
+    <!-- Плеер для видео-публикаций -->
+    {% if object.type == "video" and object.video_url %}
+        <div class="video-wrapper">
+            <iframe
+                src="{{ object.video_url }}"
+                title="{{ object.title }}"
+                allowfullscreen
+                allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+            ></iframe>
+        </div>
+    {% endif %}
+
+    <!-- Важно: класс article-content мы стилизуем отдельно -->
+    <div class="article-content">
+        {{ object.content|safe }}
+    </div>
+
+    <!-- Карусель товаров из статьи (только если товары есть в наличии) -->
+    {% if show_carousel %}
+        <section class="mt-5 pt-4 border-top">
+            <h3 class="mb-3">Товары из этой статьи</h3>
+            <div class="row g-3">
+                {% for product in products_carousel %}
+                <div class="col-md-4 col-sm-6">
+                    <div class="card h-100 shadow-sm">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}"
+                             class="card-img-top"
+                             alt="{{ product.name }}"
+                             style="height: 220px; object-fit: cover;">
+                        {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center"
+                             style="height: 220px;">
+                            <span class="text-muted">Нет фото</span>
+                        </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text text-muted mb-0">{{ product.price }} ₽</p>
+                        </div>
+                        <div class="card-footer bg-white border-top-0">
+                            <a href="{% url 'catalog:product_detail' product.pk %}"
+                               class="btn btn-outline-primary btn-sm">Смотреть</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+</div>
 {% endblock %}
