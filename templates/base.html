@@ -1,3 +1,4 @@
+<!-- templates/base.htm -->
 {% load static %}
 <!doctype html>
 <html lang="ru">
@@ -18,7 +19,7 @@
 
                 <!-- ЛИЧНЫЙ КАБИНЕТ + КОРЗИНА для мобильных: видны только до 768px -->
                 {% if user.is_authenticated %}
-                    <span class="d-md-none me-1 small">{{ user.email }}</span>
+                    <a href="{% url 'users:profile' %}" class="d-md-none me-1 small text-decoration-none">{{ user.email }}</a>
                     <form method="post" action="{% url 'users:logout' %}" class="d-inline me-2 d-md-none">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-outline-primary btn-sm">Выход</button>
@@ -57,7 +58,7 @@
                             <button type="submit" class="btn btn-sm btn-primary">Найти</button>
                         </form>
                         {% if user.is_authenticated %}
-                            <span class="text-nowrap">{{ user.email }}</span>
+                            <a href="{% url 'users:profile' %}" class="text-nowrap text-decoration-none">{{ user.email }}</a>
                             <form method="post" action="{% url 'users:logout' %}" class="d-inline">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-outline-primary btn-sm">Выход</button>
