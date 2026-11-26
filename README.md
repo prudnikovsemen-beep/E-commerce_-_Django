@@ -37,6 +37,11 @@
    source venv/bin/activate      # Linux/macOS
    poetry install
 
+## Применить миграции:
+   python manage.py migrate
+
+## Запустить сервер:
+   python manage.py runserver
 
 
 4. ** Доступ к страницам**
