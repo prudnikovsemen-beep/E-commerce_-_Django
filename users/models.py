@@ -1,3 +1,4 @@
+# users/models.py
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
@@ -29,9 +30,34 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     username = None
     email = models.EmailField(unique=True, verbose_name="Email")
-    avatar = models.ImageField(upload_to="users/avatars/", blank=True, null=True)
-    phone = models.CharField(max_length=35, blank=True, null=True, verbose_name="Телефон")
-    country = models.CharField(max_length=100, blank=True, null=True, verbose_name="Страна")
+    avatar = models.ImageField(
+        upload_to="users/avatars/", blank=True, null=True, verbose_name="Аватар"
+    )
+    phone = models.CharField(
+        max_length=35, blank=True, null=True, verbose_name="Телефон"
+    )
+    country = models.CharField(
+        max_length=100, blank=True, null=True, verbose_name="Страна"
+    )
+    nickname = models.CharField(
+        max_length=50, blank=True, null=True, verbose_name="Ник",
+        help_text="Отображаемое имя пользователя",
+    )
+    patronymic = models.CharField(
+        max_length=50, blank=True, null=True, verbose_name="Отчество"
+    )
+
+    DELIVERY_POINTS = [
+        ("tlt_center", "Тольятти, ул. Центральная, 1"),
+        ("tlt_south", "Тольятти, ул. Южная, 15"),
+        ("samara", "Самара, ул. Полевая, 7"),
+    ]
+    delivery_point = models.CharField(
+        max_length=50,
+        choices=DELIVERY_POINTS,
+        blank=True, null=True,
+        verbose_name="Пункт выдачи заказов",
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
