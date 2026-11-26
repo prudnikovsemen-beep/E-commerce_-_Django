@@ -1,8 +1,10 @@
 # users/views.py
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.mail import send_mail
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
@@ -46,3 +48,12 @@ class ProfileView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+@login_required
+def profile_upload_avatar(request):
+    if request.method == "POST" and request.FILES.get("avatar"):
+        user = request.user
+        user.avatar = request.FILES["avatar"]
+        user.save()
+    return redirect("users:profile")
