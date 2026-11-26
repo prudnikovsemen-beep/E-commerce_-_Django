@@ -1,3 +1,4 @@
+# ecommerce_project/settings.py
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -18,6 +19,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'catalog',
     'blog',
+    'users',
     'django_ckeditor_5',
 ]
 
@@ -71,12 +73,13 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+AUTH_USER_MODEL = 'users.User'
+
 LANGUAGE_CODE = 'ru-ru'
 TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
 USE_TZ = True
 
-# было STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
@@ -84,7 +87,7 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Настройки CKEditor 5 — этого блока у тебя не было, из-за него падала админка
+# Настройки CKEditor 5
 CKEDITOR_5_CONFIGS = {
     "default": {
         "language": "ru",
@@ -96,3 +99,12 @@ CKEDITOR_5_CONFIGS = {
     },
 }
 CKEDITOR_5_FILE_UPLOAD_PERMISSION = "authenticated"
+
+# Аутентификация
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+LOGIN_URL = "users:login"
+
+# Почта (пока консольный backend — письма печатаются в терминал runserver)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')

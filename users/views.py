@@ -1,0 +1,59 @@
+# users/views.py
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView, LogoutView
+from django.core.mail import send_mail
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, UpdateView
+
+from django.conf import settings
+from users.forms import UserRegisterForm, UserLoginForm, UserProfileForm
+from users.models import User
+
+
+class RegisterView(CreateView):
+    model = User
+    form_class = UserRegisterForm
+    template_name = "users/register.html"
+    success_url = reverse_lazy("catalog:product_list")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        login(self.request, self.object)
+        send_mail(
+            subject="Добро пожаловать!",
+            message=f"{self.object.email}, спасибо за регистрацию в нашем сервисе!",
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[self.object.email],
+        )
+        return response
+
+
+class UserLoginView(LoginView):
+    template_name = "users/login.html"
+    form_class = UserLoginForm
+
+
+class UserLogoutView(LogoutView):
+    pass
+
+
+class ProfileView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = UserProfileForm
+    template_name = "users/profile.html"
+    success_url = reverse_lazy("users:profile")
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+
+@login_required
+def profile_upload_avatar(request):
+    if request.method == "POST" and request.FILES.get("avatar"):
+        user = request.user
+        user.avatar = request.FILES["avatar"]
+        user.save()
+    return redirect("users:profile")

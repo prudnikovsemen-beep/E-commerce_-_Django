@@ -1,0 +1,94 @@
+<!-- profile.html -->
+{% extends 'base.html' %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+    <h2 class="mb-4">Личный кабинет</h2>
+
+    <div class="row">
+        <!-- Левая колонка: фото, кнопки -->
+        <div class="col-md-4 text-center">
+            {% if user.avatar %}
+                <img src="{{ user.avatar.url }}"
+                     alt="Аватар"
+                     class="img-fluid rounded border mb-3"
+                     style="width: 180px; height: 180px; object-fit: cover;">
+            {% else %}
+                <div class="border rounded d-flex align-items-center justify-content-center mb-3 bg-light text-muted"
+                     style="width: 180px; height: 180px; margin: 0 auto;">
+                    Нет фото
+                </div>
+            {% endif %}
+
+            <a href="#" class="btn btn-outline-primary w-100 mb-2">Заказы</a>
+
+            <!-- Отдельная форма загрузки: action ведёт на наш обработчик, не на media! -->
+            <form method="post" enctype="multipart/form-data"
+                  action="{% url 'users:upload_avatar' %}">
+                {% csrf_token %}
+                <label class="btn btn-primary w-100">
+                    Загрузить фото
+                    <input type="file" name="avatar" accept="image/*"
+                           onchange="this.form.submit()"
+                           style="display: none;">
+                </label>
+            </form>
+        </div>
+
+        <!-- Правая колонка: поля столбцом, в карточке как на странице контактов -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Мои данные</h5>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ form.nickname.id_for_label }}">Ник</label>
+                            {{ form.nickname }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ form.last_name.id_for_label }}">Фамилия</label>
+                            {{ form.last_name }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ form.first_name.id_for_label }}">Имя</label>
+                            {{ form.first_name }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ form.patronymic.id_for_label }}">Отчество</label>
+                            {{ form.patronymic }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
+                            {{ form.email }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ form.phone.id_for_label }}">Телефон</label>
+                            {{ form.phone }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ form.country.id_for_label }}">Страна</label>
+                            {{ form.country }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ form.delivery_point.id_for_label }}">Пункт выдачи заказов</label>
+                            {{ form.delivery_point }}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Сохранить профиль</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

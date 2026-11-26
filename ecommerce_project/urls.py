@@ -1,3 +1,4 @@
+# ecommerce_project/urls.py
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -10,6 +11,7 @@ urlpatterns = [
     path("catalog/", include("catalog.urls", "catalog")),
     path("blogs/", include("blog.urls", "blog")),
     path("ckeditor5/", include("django_ckeditor_5.urls")),
+    path("users/", include("users.urls")),
 ]
 
 if settings.DEBUG:
